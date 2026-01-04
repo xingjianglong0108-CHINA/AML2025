@@ -1,0 +1,5 @@
+{
+  "name": "SCCCG-AML2025 辅助决策工具",
+  "description": "基于 SCCCG-AML2025 协作方案构建的临床辅助决策支持系统，包含危险度分层、WT1监测分析、靶向药物推荐及鞘注剂量参考，采用 iOS 毛玻璃视觉设计。",
+  "requestFramePermissions": []
+}
