@@ -47,3 +47,9 @@ export interface ITDosage {
   dxm: string;
   finalVolume: string;
 }
+
+export interface GeneticManualRow {
+  risk: RiskLevel;
+  abnormality: string;
+  clinical: string;
+}

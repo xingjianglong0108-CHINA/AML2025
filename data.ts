@@ -1,104 +1,27 @@
 
-import { RiskLevel, PrognosisType, GeneticAbnormality, Table2GeneticPrognosis, TargetedDrug, ITDosage } from './types';
+import { RiskLevel, PrognosisType, GeneticAbnormality, Table2GeneticPrognosis, TargetedDrug, ITDosage, GeneticManualRow } from './types';
 
-// 表2：AML基因异常的预后分类（含合并异常及意义）
-export const TABLE2_GENETIC_PROGNOSIS: Table2GeneticPrognosis[] = [
-  {
-    type: PrognosisType.Favorable,
-    markers: [
-      { 
-        name: 't(8;21)(q22;q22.1)', 
-        description: 'RUNX1-RUNX1T1',
-        modifiers: [
-          { condition: '伴 KIT 突变 (D816)', impact: '可能抵消预后优势，建议按中危监测' },
-          { condition: '单纯缺失性染色体', impact: '不影响其优良预后' }
-        ],
-        significance: '核心结合因子(CBF) AML，诱导缓解率高，长期生存率好。'
-      },
-      { 
-        name: 'inv(16)(p13.1q22) / t(16;16)', 
-        description: 'CBFB-MYH11',
-        modifiers: [
-          { condition: '伴 KIT 突变', impact: '预后意义同 t(8;21)，需关注复发风险' }
-        ],
-        significance: 'CBF-AML，对中大剂量 Ara-C 反应极佳。'
-      },
-      { 
-        name: 'NPM1 突变', 
-        description: '核磷蛋白突变',
-        modifiers: [
-          { condition: '不伴 FLT3-ITD', impact: '独立预后良好因子' },
-          { condition: '伴 FLT3-ITD (AR < 0.5)', impact: '仍维持预后好分类' }
-        ],
-        significance: '正常核型 AML 中最重要的良好预后标记。'
-      },
-      { 
-        name: 'CEBPA bZip 突变', 
-        description: 'bZip 结构域突变',
-        significance: '无论是单突变或双突变，只要涉及 bZip 结构域，预后通常较好。'
-      }
-    ]
-  },
-  {
-    type: PrognosisType.Intermediate,
-    markers: [
-      { 
-        name: 't(9;11)(p21.3;q23.3)', 
-        description: 'MLLT3-KMT2A',
-        significance: 'KMT2A 重排中预后相对较好的一种。'
-      },
-      { 
-        name: 'FLT3-ITD (AR < 0.5)', 
-        description: '低比例突变',
-        modifiers: [
-          { condition: '伴 NPM1 突变', impact: '分类为预后好' },
-          { condition: '野生型 NPM1', impact: '维持预后中等' }
-        ],
-        significance: 'FLT3 突变负荷（等位基因比例）是决定预后的关键。'
-      },
-      { 
-        name: '其他非特定核型', 
-        description: '如正常核型 (CN-AML)',
-        significance: '需结合其他分子学标记如 WT1、ASXL1 等进一步细分。'
-      }
-    ]
-  },
-  {
-    type: PrognosisType.Adverse,
-    markers: [
-      { 
-        name: 't(6;9)(p23;q34.1)', 
-        description: 'DEK-NUP214',
-        significance: '常伴 FLT3-ITD，化疗反应差，建议早期移植。'
-      },
-      { 
-        name: 't(v;11q23.3)', 
-        description: 'KMT2A 重排 (除外 9;11)',
-        modifiers: [
-          { condition: 't(4;11) 或 t(10;11)', impact: '预后极差，复发率极高' }
-        ],
-        significance: '具有高度侵袭性。'
-      },
-      { 
-        name: '复杂核型 (≥3 种)', 
-        description: 'Complex Karyotype',
-        significance: '对标准强烈化疗反应差，缓解期短。'
-      },
-      { 
-        name: 'TP53 突变', 
-        description: '抑癌基因失活',
-        significance: 'AML 中最差的分子学标记，对常规化疗耐药。'
-      },
-      { 
-        name: '髓系异常相关突变', 
-        description: 'ASXL1, RUNX1, STAG2 等',
-        significance: '提示继发性 AML 或具有类 MDS 生物学特征。'
-      }
-    ]
-  }
+export const GENETIC_MANUAL: GeneticManualRow[] = [
+  { risk: RiskLevel.Low, abnormality: 't(8;21)(q22;q22.1)/RUNX1-RUNX1T1', clinical: '合并KIT D816V转为中危' },
+  { risk: RiskLevel.Low, abnormality: 'inv(16)/t(16;16); CBFB-MYH11', clinical: '合并+22预后好' },
+  { risk: RiskLevel.Low, abnormality: 't(1;11)(q21;q23.3)/KMT2A-MLLT11', clinical: '--' },
+  { risk: RiskLevel.Low, abnormality: 'NPM1 突变', clinical: '合并FLT3-ITD且比率≥0.5为中危' },
+  { risk: RiskLevel.Low, abnormality: 'CEBPA-bZip', clinical: 'bZip区内，无论双或单突变' },
+  { risk: RiskLevel.Medium, abnormality: 't(9;11)(p21.3;q23.3)/MLLT3-KMT2A', clinical: '合并FLT3-ITD/EVI1过表达则预后差' },
+  { risk: RiskLevel.Medium, abnormality: 'NUP98-KDM5A / NUP98-X', clinical: '合并13号染色体异常属预后差' },
+  { risk: RiskLevel.Medium, abnormality: 't(1;22)(p13.3;q13.1)/RBM15-MKL1', clinical: '--' },
+  { risk: RiskLevel.Medium, abnormality: 'FLT3-ITD (比率<0.5)', clinical: '--' },
+  { risk: RiskLevel.High, abnormality: '复杂核型 / 单体核型', clinical: '--' },
+  { risk: RiskLevel.High, abnormality: 't(6;9)(p23;q34.1)/DEK-NUP214', clinical: '--' },
+  { risk: RiskLevel.High, abnormality: 't(v;11q23.3)/KMT2A(MLL)', clinical: '除外t(1;11), t(9;11)' },
+  { risk: RiskLevel.High, abnormality: 't(9;22)(q34.1;q11.2)/BCR-ABL1', clinical: '--' },
+  { risk: RiskLevel.High, abnormality: 'Inv(16)(p13.3q24.3)/CBFA2T3-GLIS2', clinical: '--' },
+  { risk: RiskLevel.High, abnormality: 't(5;11)(q35.3;p15.5)/NUP98-NSD1', clinical: '--' },
+  { risk: RiskLevel.High, abnormality: 'Inv(3)/t(3;3)/GATA2/MECOM(EVI1)', clinical: '--' },
+  { risk: RiskLevel.High, abnormality: '-5 / del(5q); -7; -17/abn(17p)', clinical: '--' },
+  { risk: RiskLevel.High, abnormality: 'TP53 变异 (VAF > 10%)', clinical: '--' }
 ];
 
-// 表3：危险度分层依据
 export const GENETIC_PROGNOSIS: GeneticAbnormality[] = [
   { gene: 't(8;21) / RUNX1-RUNX1T1', category: RiskLevel.Low, notes: 'KIT D816V转为中危' },
   { gene: 'inv(16) / CBFB-MYH11', category: RiskLevel.Low, notes: '核心结合因子AML' },
@@ -111,11 +34,49 @@ export const GENETIC_PROGNOSIS: GeneticAbnormality[] = [
   { gene: '复杂核型 / TP53突变', category: RiskLevel.High, notes: '极高危' }
 ];
 
-export const TARGETED_DRUGS: TargetedDrug[] = [
-  { target: 'BCL2', name: '维奈克拉', brandName: 'Venetoclax', dosage: '200-250mg/m².d qd', precautions: '禁用于TP53突变；CYP3A抑制剂减量1/3' },
-  { target: 'FLT3', name: '米哚妥林', brandName: 'Midostaurin', dosage: '20-30mg/m².次 q12h', precautions: 'CYP3A抑制剂需减量' },
-  { target: 'FLT3', name: '吉瑞替尼', brandName: 'Gilteritinib', dosage: '60-70mg/m².d qd', precautions: '用于复发或难治性FLT3+' },
-  { target: 'IDH1', name: '艾伏尼布', brandName: 'Ivosidenib', dosage: '200-300mg/m².d qd', precautions: 'CYP3A抑制剂需减量' }
+export const TARGETED_DRUGS: (TargetedDrug & { details?: string })[] = [
+  { 
+    target: 'BCL2', 
+    name: '维奈克拉 (Venetoclax)', 
+    dosage: '200-250mg/m².d qd', 
+    details: '不用于TP53突变；D8理想峰浓度2000-3000ng/ml',
+    precautions: 'CYP3A4强抑制剂合用需减量1/3'
+  },
+  { 
+    target: 'FLT3-ITD/TKD', 
+    name: '米哚妥林 / 吉瑞替尼', 
+    dosage: '米: 20-30mg/m².次 q12h; 吉: 60-70mg/m².d qd', 
+    details: '吉瑞替尼用于FLT3-ITD比率≥0.5',
+    precautions: '需关注QT间期延长'
+  },
+  { 
+    target: 'IDH1/IDH2', 
+    name: '艾伏尼布 / 恩西地平', 
+    dosage: '艾: 200-300mg/m².d; 恩: 50-60mg/m².d', 
+    details: '艾伏尼布需根据CYP3A抑制剂调整',
+    precautions: '关注分化综合征风险'
+  },
+  { 
+    target: 'KMT2A / NPM1', 
+    name: '瑞维美尼 (Revumenib)', 
+    dosage: '150-160mg/m².次 q12h', 
+    details: 'FDA批准用于>1岁复发/难治KMT2A白血病',
+    precautions: 'MENIN抑制剂，关注QT延长'
+  },
+  { 
+    target: 'NRAS/KRAS', 
+    name: '曲美替尼', 
+    dosage: '0.02-0.03mg/kg.d qd', 
+    details: '餐前1h或餐后2h整粒服',
+    precautions: 'MEK抑制剂，关注心功能及视力'
+  },
+  { 
+    target: 'KIT', 
+    name: '达沙替尼', 
+    dosage: '60-70mg/m².d qd', 
+    details: '用于CBF-AML或KIT突变',
+    precautions: '监测胸腔积液及肺动脉高压'
+  }
 ];
 
 export const IT_DOSAGES: ITDosage[] = [
